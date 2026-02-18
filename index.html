@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Loading...</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/lesson-module.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="" id="favicon">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1 id="site-title">Loading...</h1>
+            <h2 id="lesson-title">Loading...</h2>
+            <!-- Grammar Topic Selector -->
+            <div class="grammar-selector">
+                <h3>Choose Your Grammar Topic:</h3>
+                <div class="grammar-buttons" id="grammar-buttons">
+                    <!-- Buttons will be inserted here by JavaScript -->
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="overall-progress"></div>
+                </div>
+                <div class="progress-text">Progress: <span id="progress-percent">0%</span></div>
+                <button id="reset-progress" class="reset-btn">Reset Progress</button>
+            </div>
+            <div class="rewards-wrapper">
+                <button id="toggle-rewards" class="toggle-rewards-btn">
+                    <span class="rewards-label">🏆 Achievements</span>
+                    <span class="rewards-toggle-icon">▼</span>
+                </button>
+                <div class="rewards-container" id="rewards-container">
+                    <div class="stars-container" id="stars-container">
+                        <!-- Stars will be added here -->
+                    </div>
+                    <div class="badges-container" id="badges-container">
+                        <!-- Badges will be added here -->
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="module-navigation" id="module-navigation">
+                <!-- Module navigation buttons will be inserted here dynamically -->
+            </div>
+            <div class="modules-wrapper">
+                <button id="toggle-modules" class="toggle-modules-btn">
+                    <span class="modules-label">📚 Learning Activities</span>
+                    <span class="modules-toggle-icon">▼</span>
+                </button>
+                <div class="modules-container" id="modules-container">
+                    <!-- Modules will be inserted here dynamically -->
+                </div>
+            </div>
+        </main>
+
+        <div class="word-bank-container">
+            <h4>Word Bank <button id="toggle-word-bank" class="toggle-btn">Show/Hide</button></h4>
+            <div class="word-bank" id="word-bank">
+                <!-- Word bank categories and words will be inserted here dynamically -->
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <p>Created by Stefanus Kae</p>
+                <p>&copy; 2025 English Adventures. All rights reserved.</p>
+                <ul class="footer-links">
+                    <li><a href="mailto:stefanustankaemingk2@gmail.com">Contact Me</a></li>
+                    <li><a href="/privacy-policy">Privacy Policy</a></li>
+                    <li><a href="/terms-of-service">Terms of Service</a></li>
+                </ul>
+            </div>
+            <button id="back-to-top" class="back-to-top-btn">Back to Top</button>
+        </footer>
+    </div>
+
+    <!-- Control Panel (Fixed Bottom Right) -->
+    <div class="control-panel-wrapper">
+        <button id="control-panel-btn" class="control-panel-btn" title="Settings Panel">
+            <span class="control-panel-icon">⚙️</span>
+        </button>
+        <div id="control-panel-menu" class="control-panel-menu">
+            <button id="control-theme-btn" class="control-menu-btn theme-btn" title="Toggle Dark/Light Mode">
+                <span class="control-menu-icon">🌙</span>
+                <span class="control-menu-label">Dark Mode</span>
+            </button>
+            <button id="control-music-btn" class="control-menu-btn music-btn" title="Toggle Background Music">
+                <span class="control-menu-icon">🎵</span>
+                <span class="control-menu-label">Background Music</span>
+            </button>
+            <button id="control-sound-btn" class="control-menu-btn sound-btn" title="Toggle Sound Effects">
+                <span class="control-menu-icon">🔊</span>
+                <span class="control-menu-label">Sound Effects</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="feedback-modal" class="feedback-modal-modern">
+        <div class="feedback-modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <div class="feedback-emoji-container">
+                <div id="feedback-reward" class="feedback-emoji"></div>
+            </div>
+            <h3 id="feedback-title" class="feedback-title"></h3>
+            <p id="feedback-message" class="feedback-message"></p>
+            <button id="feedback-continue" class="feedback-continue-btn">Continue</button>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+
+    <!-- Audio elements will be dynamically created -->
+    <div id="audio-container">
+        <!-- Audio elements will be inserted here dynamically -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <script src="modules/imageService.js"></script>
+    <script src="modules/lessonModule.js"></script>
+    <script src="modules/writingModule.js"></script>
+    <script src="modules/gameModule.js"></script>
+    <script src="modules/quizModule.js"></script>
+    <script src="modules/spellingHelper.js"></script>
+    <script src="modules/rewardsSystem.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
