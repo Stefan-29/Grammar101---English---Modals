@@ -74,7 +74,7 @@ const App = {
 
     // ———————————————————— LOAD ALL GRAMMAR MODULES ————————————————————
     loadGrammarModules: function () {
-        const moduleNames = ['can-could-be-able-to',]; // Add new ones here
+        const moduleNames = ['can-could-be-able-to','must-have-to-have-got-to']; // Add new ones here
         const promises = moduleNames.map(name => {
             const configPath = `config/${name}.json`;
             return fetch(configPath)
