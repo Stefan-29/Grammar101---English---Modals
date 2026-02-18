@@ -1646,5 +1646,6 @@ const App = {
         }
     },
 };
+
 // Start the app
 App.init();
