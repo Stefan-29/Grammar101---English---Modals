@@ -1710,7 +1710,15 @@ header::after {
     overflow: hidden;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .hint-btn.hidden {
+    display: none; /* Hide button initially */
+}
+
+.reveal-btn.hidden {
     display: none; /* Hide button initially */
 }
 

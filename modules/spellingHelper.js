@@ -3,15 +3,17 @@ const SpellingHelper = {
     hintCounts: {},
     hasFailed: {},
     perfectCompletes: {},
-    hintThreshold: 2, // Number of "Reveal Letter" clicks before "Show Hint" appears
-    maxHints: 2, // Maximum total hints allowed per activity
-    maxRevealLetters: 2, // Maximum letter reveals per activity
+    attemptCounts: {}, // Track number of attempts per activity
+    attemptThreshold: 3, // Number of wrong attempts before letter reveal unlocks
+    maxHints: 1, // Maximum total hints allowed per activity
+    maxRevealLetters: 1, // Maximum letter reveals per activity (only after failures)
 
     init: function (activities) {
         this.activities = activities;
         this.hintCounts = {};
         this.hasFailed = {};
         this.perfectCompletes = {};
+        this.attemptCounts = {};
         this.renderActivities();
     },
 
@@ -30,6 +32,7 @@ const container = document.getElementById('spelling-module-activities');
             this.hintCounts[activity.id] = this.hintCounts[activity.id] || { reveal: 0, hint: 0 };
             this.hasFailed[activity.id] ||= false;
             this.perfectCompletes[activity.id] ||= false;
+            this.attemptCounts[activity.id] = this.attemptCounts[activity.id] || 0;
 
             const activityCard = document.createElement('div');
             activityCard.className = 'activity-card';
@@ -102,20 +105,28 @@ const container = document.getElementById('spelling-module-activities');
             const hintButton = document.createElement('button');
             hintButton.className = 'btn hint-btn';
             hintButton.textContent = 'Show Hint';
-            hintButton.classList.add('hidden'); // Hide initially
+            hintButton.classList.add('hidden'); // Hide initially - only appears after attempts
             const hintState = this.hintCounts[activity.id];
-            if (isCompleted || hintState.reveal >= this.hintThreshold) {
-                hintButton.classList.remove('hidden'); // Show if completed or threshold met
-                const hintsUsed = hintState.hint || 0;
-                hintButton.disabled = hintsUsed >= this.maxHints;
-                hintButton.textContent = hintsUsed >= this.maxHints ? '💡 Hints Exhausted' : `💡 Show Hint (${hintsUsed}/${this.maxHints})`;
-                hintButton.style.background = hintsUsed >= this.maxHints ? '#6c757d' : '#4ecdc4';
+            const attempts = this.attemptCounts[activity.id] || 0;
+            if (isCompleted) {
+                hintButton.classList.add('hidden'); // Keep hidden after completion
             }
+            const hintsUsed = hintState.hint || 0;
+            hintButton.disabled = hintsUsed >= this.maxHints;
+            hintButton.textContent = hintsUsed >= this.maxHints ? '💡 Hints Exhausted' : `💡 Show Hint`;
+            hintButton.style.background = hintsUsed >= this.maxHints ? '#6c757d' : '#4ecdc4';
+            
             const revealLetterButton = document.createElement('button');
             revealLetterButton.className = 'btn reveal-btn';
             const revealUsed = hintState.reveal || 0;
+            // Hide reveal letter button initially - only show after failed attempts
+            if (attempts < this.attemptThreshold) {
+                revealLetterButton.classList.add('hidden');
+                revealLetterButton.textContent = 'Reveal Letter';
+            } else {
+                revealLetterButton.textContent = revealUsed >= this.maxRevealLetters ? 'Letter Revealed' : `Reveal Letter (${revealUsed}/${this.maxRevealLetters})`;
+            }
             revealLetterButton.disabled = isCompleted || revealUsed >= this.maxRevealLetters;
-            revealLetterButton.textContent = revealUsed >= this.maxRevealLetters ? 'Letters Revealed' : `Reveal Letter (${revealUsed}/${this.maxRevealLetters})`;
             revealLetterButton.style.background = revealUsed >= this.maxRevealLetters ? '#6c757d' : '#f59e0b';
             buttonsContainer.appendChild(checkButton);
             buttonsContainer.appendChild(hintButton);
@@ -237,28 +248,27 @@ const container = document.getElementById('spelling-module-activities');
             App.playSound('hintSound');
 
             // Update reveal button
+            const revealBtn = activityCard.querySelector('.reveal-btn');
             if (newRevealCount >= this.maxRevealLetters) {
-                hintButton.disabled = true;
-                hintButton.textContent = 'Letters Revealed';
-                hintButton.style.background = '#6c757d';
+                revealBtn.disabled = true;
+                revealBtn.textContent = 'Letter Revealed';
+                revealBtn.style.background = '#6c757d';
                 setTimeout(() => {
-                    App.showFeedback('Letter Reveals Done', 'No more letters can be revealed. Try showing the hint if available!', '⚠️');
+                    App.showFeedback('Letter Reveals Done', 'That\'s your only letter reveal. Try to solve it now!', '⚠️');
                 }, 500);
             } else {
-                hintButton.textContent = `Reveal Letter (${newRevealCount}/${this.maxRevealLetters})`;
+                revealBtn.textContent = `Reveal Letter (${newRevealCount}/${this.maxRevealLetters})`;
             }
 
-            // ✅ SHOW HINT BUTTON AFTER REACHING THRESHOLD
-            if (newRevealCount >= this.hintThreshold) {
-                const hintBtn = activityCard.querySelector('.hint-btn');
-                if (hintBtn && hintBtn.classList.contains('hidden')) {
-                    hintBtn.classList.remove('hidden');
-                    const hintsUsed = hintState.hint || 0;
-                    hintBtn.disabled = hintsUsed >= this.maxHints;
-                    hintBtn.textContent = hintsUsed >= this.maxHints ? '💡 Hints Exhausted' : `💡 Show Hint (${hintsUsed}/${this.maxHints})`;
-                    hintBtn.style.background = hintsUsed >= this.maxHints ? '#6c757d' : '#4ecdc4';
-                    App.showFeedback('Hint Available!', 'You\'ve revealed enough letters. The hint is now available!', '💡');
-                }
+            // Show the hint button only after letter reveal is used
+            const hintBtn = activityCard.querySelector('.hint-btn');
+            if (hintBtn && hintBtn.classList.contains('hidden')) {
+                hintBtn.classList.remove('hidden');
+                const hintsUsed = hintState.hint || 0;
+                hintBtn.disabled = hintsUsed >= this.maxHints;
+                hintBtn.textContent = hintsUsed >= this.maxHints ? '💡 Hints Exhausted' : `💡 Show Hint`;
+                hintBtn.style.background = hintsUsed >= this.maxHints ? '#6c757d' : '#4ecdc4';
+                App.showFeedback('Hint Available!', 'You\'ve revealed a letter. The hint is now available!', '💡');
             }
         } else {
             App.showFeedback('No More Hints', 'Try checking your answer now!', '❌');
@@ -300,7 +310,7 @@ const container = document.getElementById('spelling-module-activities');
         if (userAnswer === correctAnswer.toLowerCase()) {
             if (!silent) {
                 App.showFeedback('Perfect!', `Correct! The word is "${activity.word}".`, '🎉');
-                if (!hasPreviouslyFailed && this.hintCounts[activity.id] === 0) {
+                if (!hasPreviouslyFailed && this.hintCounts[activity.id].reveal === 0) {
                     this.perfectCompletes[activity.id] = true;
                 }
                 App.markActivityCompleted(activity.id);
@@ -317,6 +327,10 @@ const container = document.getElementById('spelling-module-activities');
             return { status: 'correct', message: 'Correct spelling' };
         } else {
             this.hasFailed[activity.id] = true;
+            // Increment attempt counter on wrong answer
+            const currentAttempts = (this.attemptCounts[activity.id] || 0) + 1;
+            this.attemptCounts[activity.id] = currentAttempts;
+
             let hasError = false;
             letterIndex = 0;
             for (let i = 0; i < correctAnswer.length; i++) {
@@ -330,11 +344,28 @@ const container = document.getElementById('spelling-module-activities');
                     letterIndex++;
                 }
             }
-            // Inside incorrect block
+
+            // Unlock letter reveal button when attempt threshold is reached
+            if (currentAttempts === this.attemptThreshold) {
+                const revealBtn = activityCard.querySelector('.reveal-btn');
+                if (revealBtn && revealBtn.classList.contains('hidden')) {
+                    revealBtn.classList.remove('hidden');
+                    revealBtn.textContent = `Reveal Letter (0/${this.maxRevealLetters})`;
+                    revealBtn.disabled = false;
+                    revealBtn.style.background = '#f59e0b';
+                    if (!silent) {
+                        setTimeout(() => {
+                            App.showFeedback(`Letter Reveal Unlocked!`, `You've made ${this.attemptThreshold} attempts. You can now reveal 1 letter!`, '🔓');
+                        }, 500);
+                    }
+                }
+            }
+
             if (!silent) {
                 App.showFeedback('Try Again', 'Some letters are incorrect. Review and try again!', '🔄');
                 App.playSound('wrongSound');
-            } return { status: 'incorrect', message: 'Incorrect spelling' };
+            }
+            return { status: 'incorrect', message: 'Incorrect spelling' };
         }
     },
 
@@ -343,6 +374,7 @@ const container = document.getElementById('spelling-module-activities');
         this.hintCounts = {};
         this.hasFailed = {};
         this.perfectCompletes = {};
+        this.attemptCounts = {};
         this.renderActivities();
     },
 };
