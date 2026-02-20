@@ -13,8 +13,23 @@ const App = {
         completedActivities: {},   // Now: { 'past-tenses': {...}, 'future-perfect': {...}, ... }
         moduleStars: {},            // Now: { 'past-tenses': 5, 'future-perfect': 3, ... }
         rewards: { stars: 0, points: 0, badges: [] },
+        
+        // Audio Settings
         audioEnabled: false,
-        soundEffectsEnabled: true
+        soundEffectsEnabled: true,
+        musicVolume: 30,
+        soundVolume: 70,
+        
+        // Display Settings
+        textSize: '14',
+        animationsEnabled: true,
+        
+        // Learning Preferences
+        autoShowHints: true,
+        
+        // Accessibility Settings
+        highContrast: false,
+        reduceMotion: false,
     },
 
     config: null,
@@ -74,7 +89,7 @@ const App = {
 
     // ———————————————————— LOAD ALL GRAMMAR MODULES ————————————————————
     loadGrammarModules: function () {
-        const moduleNames = ['can-could-be-able-to','must-have-to-have-got-to','shall-will-would-had-better','should-ought-to']; // Add new ones here
+        const moduleNames = ['can-could-be-able-to','must-have-to-have-got-to','shall-will-would-had-better','should-ought-to','may-might']; // Add new ones here
         const promises = moduleNames.map(name => {
             const configPath = `config/${name}.json`;
             return fetch(configPath)
@@ -421,7 +436,8 @@ const App = {
                 const backgroundMusic = document.createElement('audio');
                 backgroundMusic.id = 'backgroundMusic';
                 backgroundMusic.loop = true;
-                backgroundMusic.volume = 0.3;
+                // Use saved music volume (default 30%)
+                backgroundMusic.volume = (this.state.musicVolume || 30) / 100;
 
                 const source = document.createElement('source');
                 source.src = this.config.audio.backgroundMusic;
@@ -707,83 +723,8 @@ const App = {
             console.error('❌ toggleSoundEffects button not found in DOM');
         }
 
-        // ===== NEW: Control Panel Button =====
-        const controlPanelBtn = document.getElementById('control-panel-btn');
-        const controlPanelMenu = document.getElementById('control-panel-menu');
-        
-        if (controlPanelBtn && controlPanelMenu) {
-            console.log('✅ Found control panel button, attaching listener');
-            controlPanelBtn.removeEventListener('click', this.controlPanelHandler);
-            controlPanelBtn.addEventListener('click', this.controlPanelHandler = (e) => {
-                e.stopPropagation();
-                console.log('⚙️ Control panel toggled');
-                controlPanelMenu.classList.toggle('active');
-            }, { capture: false });
-            
-            // Close menu when clicking outside
-            document.removeEventListener('click', this.closeMenuHandler);
-            document.addEventListener('click', this.closeMenuHandler = (e) => {
-                if (!controlPanelBtn.contains(e.target) && !controlPanelMenu.contains(e.target)) {
-                    controlPanelMenu.classList.remove('active');
-                }
-            }, { capture: false });
-        }
-
-        // ===== Control Panel: Theme Toggle =====
-        const controlThemeBtn = document.getElementById('control-theme-btn');
-        if (controlThemeBtn) {
-            console.log('✅ Found control-theme button, attaching listener');
-            controlThemeBtn.removeEventListener('click', this.controlThemeHandler);
-            controlThemeBtn.addEventListener('click', this.controlThemeHandler = (e) => {
-                e.stopPropagation();
-                console.log('🌓 Theme toggled from control panel');
-                this.toggleTheme();
-                this.updateControlPanelState();
-            }, { capture: false });
-        }
-
-        // ===== Control Panel: Music Toggle =====
-        const controlMusicBtn = document.getElementById('control-music-btn');
-        if (controlMusicBtn) {
-            console.log('✅ Found control-music button, attaching listener');
-            controlMusicBtn.removeEventListener('click', this.controlMusicHandler);
-            controlMusicBtn.addEventListener('click', this.controlMusicHandler = (e) => {
-                e.stopPropagation();
-                console.log('🎵 Background music toggled from control panel');
-                this.state.audioEnabled = !this.state.audioEnabled;
-                
-                // Play/pause background music
-                const backgroundMusic = document.getElementById('backgroundMusic');
-                if (backgroundMusic) {
-                    if (this.state.audioEnabled) {
-                        backgroundMusic.volume = 0.3;
-                        backgroundMusic.play().catch(err => {
-                            console.warn('❌ Background music playback failed:', err);
-                            this.state.audioEnabled = false;
-                        });
-                    } else {
-                        backgroundMusic.pause();
-                    }
-                }
-                
-                this.updateControlPanelState();
-                this.saveState();
-                console.log('🎵 Audio enabled:', this.state.audioEnabled);
-            }, { capture: false });
-        }
-
-        // ===== Control Panel: Sound Effects Toggle =====
-        const controlSoundBtn = document.getElementById('control-sound-btn');
-        if (controlSoundBtn) {
-            console.log('✅ Found control-sound button, attaching listener');
-            controlSoundBtn.removeEventListener('click', this.controlSoundHandler);
-            controlSoundBtn.addEventListener('click', this.controlSoundHandler = (e) => {
-                e.stopPropagation();
-                console.log('🔊 Sound effects toggled from control panel');
-                this.toggleSound();
-                this.updateControlPanelState();
-            }, { capture: false });
-        }
+        // ===== NEW: Control Panel Button & Settings =====
+        this.setupSettingsPanel();
 
         // Re-attach navigation buttons (Lesson / Writing / Games / Spelling)
         this.setupNavigationListeners();
@@ -1204,6 +1145,8 @@ const App = {
         const sound = document.getElementById(soundId);
         if (sound) {
             sound.currentTime = 0;
+            // Set sound effects volume
+            sound.volume = (this.state.soundVolume || 70) / 100;
             sound.play().catch(e => {
                 console.warn(`❌ Failed to play sound ${soundId}:`, e);
             });
@@ -1346,8 +1289,22 @@ const App = {
                             points: parsedState.rewards.points || 0,
                             badges: parsedState.rewards.badges || []
                         },
+                        // Audio Settings
                         audioEnabled: parsedState.audioEnabled !== undefined ? parsedState.audioEnabled : false,
-                        soundEffectsEnabled: parsedState.soundEffectsEnabled !== undefined ? parsedState.soundEffectsEnabled : true
+                        soundEffectsEnabled: parsedState.soundEffectsEnabled !== undefined ? parsedState.soundEffectsEnabled : true,
+                        musicVolume: parsedState.musicVolume !== undefined ? parsedState.musicVolume : 30,
+                        soundVolume: parsedState.soundVolume !== undefined ? parsedState.soundVolume : 70,
+                        
+                        // Display Settings
+                        textSize: parsedState.textSize || '14',
+                        animationsEnabled: parsedState.animationsEnabled !== undefined ? parsedState.animationsEnabled : true,
+                        
+                        // Learning Preferences
+                        autoShowHints: parsedState.autoShowHints !== undefined ? parsedState.autoShowHints : true,
+                        
+                        // Accessibility Settings
+                        highContrast: parsedState.highContrast === true,
+                        reduceMotion: parsedState.reduceMotion === true,
                     };
                     console.log('State loaded successfully:', this.state.overallProgress);
                     this.switchModule(this.state.activeModule || 'writing-module');
@@ -1374,6 +1331,13 @@ const App = {
         this.state.moduleStars = {};
         this.state.audioEnabled = false;
         this.state.soundEffectsEnabled = true;
+        this.state.musicVolume = 30;
+        this.state.soundVolume = 70;
+        this.state.textSize = '14';
+        this.state.animationsEnabled = true;
+        this.state.autoShowHints = true;
+        this.state.highContrast = false;
+        this.state.reduceMotion = false;
         this.switchModule('writing-module');
         this.saveState();
         this.refreshModules();
@@ -1394,6 +1358,20 @@ const App = {
         }
         
         console.log('🌓 Theme applied:', isDarkMode ? 'Dark Mode' : 'Light Mode');
+        
+        // Apply text size
+        if (this.state.textSize) {
+            document.documentElement.style.fontSize = this.state.textSize + 'px';
+        }
+        
+        // Apply accessibility settings
+        if (this.state.highContrast) {
+            document.body.classList.add('high-contrast');
+        }
+        
+        if (this.state.reduceMotion) {
+            document.body.classList.add('reduce-motion');
+        }
         
         // Update control panel after theme is applied
         setTimeout(() => this.updateControlPanelState(), 100);
@@ -1622,28 +1600,279 @@ const App = {
     // ===== UPDATE CONTROL PANEL STATE =====
     updateControlPanelState: function () {
         const isDarkMode = document.body.classList.contains('dark-mode');
-        const controlThemeBtn = document.getElementById('control-theme-btn');
-        const controlMusicBtn = document.getElementById('control-music-btn');
-        const controlSoundBtn = document.getElementById('control-sound-btn');
         
-        // Update theme button
-        if (controlThemeBtn) {
-            const themeIcon = controlThemeBtn.querySelector('.control-menu-icon');
-            if (themeIcon) themeIcon.textContent = isDarkMode ? '☀️' : '🌙';
-            controlThemeBtn.classList.toggle('active', isDarkMode);
+        // Update theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) themeToggle.checked = isDarkMode;
+        
+        // Update music toggle and volume
+        const musicToggle = document.getElementById('music-toggle');
+        const musicVolume = document.getElementById('music-volume');
+        const musicVolumeDisplay = document.getElementById('music-volume-display');
+        if (musicToggle) musicToggle.checked = this.state.audioEnabled;
+        if (musicVolume && musicVolumeDisplay) {
+            musicVolume.value = (this.state.musicVolume || 30);
+            musicVolumeDisplay.textContent = (this.state.musicVolume || 30) + '%';
         }
         
-        // Update music button
-        if (controlMusicBtn) {
-            controlMusicBtn.classList.toggle('active', this.state.audioEnabled);
+        // Update sound toggle and volume
+        const soundToggle = document.getElementById('sound-toggle');
+        const soundVolume = document.getElementById('sound-volume');
+        const soundVolumeDisplay = document.getElementById('sound-volume-display');
+        if (soundToggle) soundToggle.checked = this.state.soundEffectsEnabled;
+        if (soundVolume && soundVolumeDisplay) {
+            soundVolume.value = (this.state.soundVolume || 70);
+            soundVolumeDisplay.textContent = (this.state.soundVolume || 70) + '%';
         }
         
-        // Update sound button
-        if (controlSoundBtn) {
-            const soundIcon = controlSoundBtn.querySelector('.control-menu-icon');
-            if (soundIcon) soundIcon.textContent = this.state.soundEffectsEnabled ? '🔊' : '🔇';
-            controlSoundBtn.classList.toggle('active', this.state.soundEffectsEnabled);
+        // Update other toggles
+        const animationToggle = document.getElementById('animation-toggle');
+        const hintsToggle = document.getElementById('hints-toggle');
+        const focusToggle = document.getElementById('focus-toggle');
+        const reduceMotion = document.getElementById('reduce-motion');
+        
+        if (animationToggle) animationToggle.checked = this.state.animationsEnabled !== false;
+        if (hintsToggle) hintsToggle.checked = this.state.autoShowHints !== false;
+        if (focusToggle) focusToggle.checked = this.state.highContrast === true;
+        if (reduceMotion) reduceMotion.checked = this.state.reduceMotion === true;
+    },
+
+    setupSettingsPanel: function () {
+        const controlPanelBtn = document.getElementById('control-panel-btn');
+        const controlPanelMenu = document.getElementById('control-panel-menu');
+        const settingsCloseBtn = document.querySelector('.settings-close-btn');
+        
+        // Initialize settings on first load
+        this.updateControlPanelState();
+        
+        // Control panel toggle
+        if (controlPanelBtn && controlPanelMenu) {
+            controlPanelBtn.removeEventListener('click', this.controlPanelHandler);
+            controlPanelBtn.addEventListener('click', this.controlPanelHandler = (e) => {
+                e.stopPropagation();
+                console.log('⚙️ Settings panel toggled');
+                controlPanelMenu.classList.toggle('active');
+            });
+            
+            // Close button
+            if (settingsCloseBtn) {
+                settingsCloseBtn.removeEventListener('click', this.settingsCloseHandler);
+                settingsCloseBtn.addEventListener('click', this.settingsCloseHandler = (e) => {
+                    e.stopPropagation();
+                    controlPanelMenu.classList.remove('active');
+                });
+            }
+            
+            // Close when clicking outside
+            document.removeEventListener('click', this.closeSettingsHandler);
+            document.addEventListener('click', this.closeSettingsHandler = (e) => {
+                if (!controlPanelBtn.contains(e.target) && !controlPanelMenu.contains(e.target)) {
+                    controlPanelMenu.classList.remove('active');
+                }
+            });
         }
+        
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.removeEventListener('change', this.themeToggleHandler);
+            themeToggle.addEventListener('change', this.themeToggleHandler = (e) => {
+                console.log('🌓 Theme toggled:', e.target.checked ? 'Dark' : 'Light');
+                if (e.target.checked) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+                localStorage.setItem('grammar101-theme', e.target.checked ? 'dark' : 'light');
+                this.saveState();
+            });
+        }
+        
+        // Text Size
+        const textSizeSlider = document.getElementById('text-size');
+        if (textSizeSlider) {
+            textSizeSlider.value = this.state.textSize || '14';
+            textSizeSlider.removeEventListener('input', this.textSizeHandler);
+            textSizeSlider.addEventListener('input', this.textSizeHandler = (e) => {
+                const size = e.target.value;
+                document.documentElement.style.fontSize = size + 'px';
+                this.state.textSize = size;
+                console.log('📝 Text size changed to:', size + 'px');
+                this.saveState();
+            });
+            // Apply saved text size
+            document.documentElement.style.fontSize = (this.state.textSize || '14') + 'px';
+        }
+        
+        // Music Toggle
+        const musicToggle = document.getElementById('music-toggle');
+        if (musicToggle) {
+            musicToggle.removeEventListener('change', this.musicToggleHandler);
+            musicToggle.addEventListener('change', this.musicToggleHandler = (e) => {
+                this.state.audioEnabled = e.target.checked;
+                console.log('🎵 Background music toggled:', e.target.checked ? 'On' : 'Off');
+                
+                const backgroundMusic = document.getElementById('backgroundMusic');
+                if (backgroundMusic) {
+                    if (e.target.checked) {
+                        backgroundMusic.volume = (this.state.musicVolume || 30) / 100;
+                        backgroundMusic.play().catch(err => console.warn('Music play failed:', err));
+                    } else {
+                        backgroundMusic.pause();
+                    }
+                }
+                this.saveState();
+            });
+        }
+        
+        // Music Volume
+        const musicVolume = document.getElementById('music-volume');
+        const musicVolumeDisplay = document.getElementById('music-volume-display');
+        if (musicVolume && musicVolumeDisplay) {
+            musicVolume.removeEventListener('input', this.musicVolumeHandler);
+            musicVolume.addEventListener('input', this.musicVolumeHandler = (e) => {
+                const volume = e.target.value;
+                this.state.musicVolume = volume;
+                musicVolumeDisplay.textContent = volume + '%';
+                
+                const backgroundMusic = document.getElementById('backgroundMusic');
+                if (backgroundMusic) {
+                    backgroundMusic.volume = volume / 100;
+                }
+                console.log('🔊 Music volume changed to:', volume + '%');
+                this.saveState();
+            });
+        }
+        
+        // Sound Effects Toggle
+        const soundToggle = document.getElementById('sound-toggle');
+        if (soundToggle) {
+            soundToggle.removeEventListener('change', this.soundToggleHandler);
+            soundToggle.addEventListener('change', this.soundToggleHandler = (e) => {
+                this.state.soundEffectsEnabled = e.target.checked;
+                console.log('🔔 Sound effects toggled:', e.target.checked ? 'On' : 'Off');
+                
+                if (e.target.checked) {
+                    this.playSound('correctSound');
+                }
+                this.saveState();
+            });
+        }
+        
+        // Sound Volume
+        const soundVolume = document.getElementById('sound-volume');
+        const soundVolumeDisplay = document.getElementById('sound-volume-display');
+        if (soundVolume && soundVolumeDisplay) {
+            soundVolume.removeEventListener('input', this.soundVolumeHandler);
+            soundVolume.addEventListener('input', this.soundVolumeHandler = (e) => {
+                const volume = e.target.value;
+                this.state.soundVolume = volume;
+                soundVolumeDisplay.textContent = volume + '%';
+                console.log('🔊 Sound effects volume changed to:', volume + '%');
+                this.saveState();
+            });
+        }
+        
+        // Animations Toggle
+        const animationToggle = document.getElementById('animation-toggle');
+        if (animationToggle) {
+            animationToggle.removeEventListener('change', this.animationToggleHandler);
+            animationToggle.addEventListener('change', this.animationToggleHandler = (e) => {
+                this.state.animationsEnabled = e.target.checked;
+                document.body.style.animation = e.target.checked ? 'auto' : 'none';
+                console.log('✨ Animations toggled:', e.target.checked ? 'On' : 'Off');
+                this.saveState();
+            });
+        }
+        
+        // Hints Toggle
+        const hintsToggle = document.getElementById('hints-toggle');
+        if (hintsToggle) {
+            hintsToggle.removeEventListener('change', this.hintsToggleHandler);
+            hintsToggle.addEventListener('change', this.hintsToggleHandler = (e) => {
+                this.state.autoShowHints = e.target.checked;
+                console.log('💡 Auto-show hints toggled:', e.target.checked ? 'On' : 'Off');
+                this.saveState();
+            });
+        }
+        
+        // High Contrast Toggle
+        const focusToggle = document.getElementById('focus-toggle');
+        if (focusToggle) {
+            focusToggle.removeEventListener('change', this.focusToggleHandler);
+            focusToggle.addEventListener('change', this.focusToggleHandler = (e) => {
+                this.state.highContrast = e.target.checked;
+                if (e.target.checked) {
+                    document.body.classList.add('high-contrast');
+                } else {
+                    document.body.classList.remove('high-contrast');
+                }
+                console.log('👁️ High contrast toggled:', e.target.checked ? 'On' : 'Off');
+                this.saveState();
+            });
+            // Apply saved high contrast
+            if (this.state.highContrast) {
+                document.body.classList.add('high-contrast');
+            }
+        }
+        
+        // Reduce Motion Toggle
+        const reduceMotion = document.getElementById('reduce-motion');
+        if (reduceMotion) {
+            reduceMotion.removeEventListener('change', this.reduceMotionHandler);
+            reduceMotion.addEventListener('change', this.reduceMotionHandler = (e) => {
+                this.state.reduceMotion = e.target.checked;
+                if (e.target.checked) {
+                    document.body.classList.add('reduce-motion');
+                } else {
+                    document.body.classList.remove('reduce-motion');
+                }
+                console.log('⚡ Reduce motion toggled:', e.target.checked ? 'On' : 'Off');
+                this.saveState();
+            });
+            // Apply saved reduce motion
+            if (this.state.reduceMotion) {
+                document.body.classList.add('reduce-motion');
+            }
+        }
+        
+        // Reset Settings
+        const resetBtn = document.getElementById('reset-settings-btn');
+        if (resetBtn) {
+            resetBtn.removeEventListener('click', this.resetSettingsHandler);
+            resetBtn.addEventListener('click', this.resetSettingsHandler = (e) => {
+                e.stopPropagation();
+                if (confirm('Are you sure you want to reset all settings to default?')) {
+                    console.log('🔄 Resetting settings to default');
+                    // Reset to defaults
+                    document.body.classList.remove('dark-mode', 'high-contrast', 'reduce-motion');
+                    document.documentElement.style.fontSize = '14px';
+                    
+                    // Update state
+                    this.state.textSize = '14';
+                    this.state.audioEnabled = true;
+                    this.state.musicVolume = 30;
+                    this.state.soundEffectsEnabled = true;
+                    this.state.soundVolume = 70;
+                    this.state.animationsEnabled = true;
+                    this.state.autoShowHints = true;
+                    this.state.highContrast = false;
+                    this.state.reduceMotion = false;
+                    
+                    // Update UI
+                    this.updateControlPanelState();
+                    
+                    // Clear localStorage
+                    localStorage.setItem('grammar101-theme', 'light');
+                    this.saveState();
+                    
+                    this.playSound('correctSound');
+                    console.log('✅ Settings reset to default');
+                }
+            });
+        }
+        
+        console.log('✅ Settings panel initialized successfully');
     },
 };
 

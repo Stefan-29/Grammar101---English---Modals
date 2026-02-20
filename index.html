@@ -88,18 +88,154 @@
             <span class="control-panel-icon">⚙️</span>
         </button>
         <div id="control-panel-menu" class="control-panel-menu">
-            <button id="control-theme-btn" class="control-menu-btn theme-btn" title="Toggle Dark/Light Mode">
-                <span class="control-menu-icon">🌙</span>
-                <span class="control-menu-label">Dark Mode</span>
-            </button>
-            <button id="control-music-btn" class="control-menu-btn music-btn" title="Toggle Background Music">
-                <span class="control-menu-icon">🎵</span>
-                <span class="control-menu-label">Background Music</span>
-            </button>
-            <button id="control-sound-btn" class="control-menu-btn sound-btn" title="Toggle Sound Effects">
-                <span class="control-menu-icon">🔊</span>
-                <span class="control-menu-label">Sound Effects</span>
-            </button>
+            <div class="settings-header">
+                <h3>Settings & Preferences</h3>
+                <button class="settings-close-btn" title="Close Settings">
+                    <span>✕</span>
+                </button>
+            </div>
+
+            <div class="settings-content">
+                <!-- Display Settings -->
+                <div class="settings-section">
+                    <h4 class="settings-section-title">📺 Display</h4>
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <label for="theme-toggle" class="setting-label">
+                                <span class="setting-icon">🌙</span>
+                                <span class="setting-text">Dark Mode</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="theme-toggle" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label for="text-size" class="setting-label">
+                                <span class="setting-icon">📝</span>
+                                <span class="setting-text">Text Size</span>
+                            </label>
+                            <div class="slider-container">
+                                <span class="slider-label">A</span>
+                                <input type="range" id="text-size" min="12" max="18" value="14" class="settings-slider">
+                                <span class="slider-label large">A</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Settings -->
+                <div class="settings-section">
+                    <h4 class="settings-section-title">🎵 Audio</h4>
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <label for="music-toggle" class="setting-label">
+                                <span class="setting-icon">🎶</span>
+                                <span class="setting-text">Background Music</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="music-toggle" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item sub-item">
+                            <label for="music-volume" class="setting-label">
+                                <span class="setting-text">Music Volume</span>
+                            </label>
+                            <div class="volume-control">
+                                <span class="volume-icon">🔇</span>
+                                <input type="range" id="music-volume" min="0" max="100" value="30" class="volume-slider">
+                                <span class="volume-icon loud">🔊</span>
+                                <span class="volume-percent" id="music-volume-display">30%</span>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label for="sound-toggle" class="setting-label">
+                                <span class="setting-icon">🔔</span>
+                                <span class="setting-text">Sound Effects</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="sound-toggle" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item sub-item">
+                            <label for="sound-volume" class="setting-label">
+                                <span class="setting-text">Effects Volume</span>
+                            </label>
+                            <div class="volume-control">
+                                <span class="volume-icon">🔇</span>
+                                <input type="range" id="sound-volume" min="0" max="100" value="70" class="volume-slider">
+                                <span class="volume-icon loud">🔊</span>
+                                <span class="volume-percent" id="sound-volume-display">70%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Preferences -->
+                <div class="settings-section">
+                    <h4 class="settings-section-title">🎓 Learning</h4>
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <label for="animation-toggle" class="setting-label">
+                                <span class="setting-icon">✨</span>
+                                <span class="setting-text">Animations</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="animation-toggle" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label for="hints-toggle" class="setting-label">
+                                <span class="setting-icon">💡</span>
+                                <span class="setting-text">Auto-Show Hints</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="hints-toggle" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessibility -->
+                <div class="settings-section">
+                    <h4 class="settings-section-title">♿ Accessibility</h4>
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <label for="focus-toggle" class="setting-label">
+                                <span class="setting-icon">👁️</span>
+                                <span class="setting-text">High Contrast</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="focus-toggle" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label for="reduce-motion" class="setting-label">
+                                <span class="setting-icon">⚡</span>
+                                <span class="setting-text">Reduce Motion</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="reduce-motion" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="settings-section">
+                    <div class="settings-actions">
+                        <button id="reset-settings-btn" class="settings-action-btn reset-btn" title="Reset settings to default">
+                            <span class="action-icon">🔄</span> Reset to Default
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

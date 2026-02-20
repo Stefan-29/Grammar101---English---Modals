@@ -4,8 +4,8 @@ const SpellingHelper = {
     hasFailed: {},
     perfectCompletes: {},
     attemptCounts: {}, // Track number of attempts per activity
-    attemptThreshold: 3, // Number of wrong attempts before letter reveal unlocks
-    maxHints: 1, // Maximum total hints allowed per activity
+    attemptThreshold: 2, // Number of wrong attempts before letter reveal unlocks
+    maxHints: 2, // Maximum total hints allowed per activity
     maxRevealLetters: 1, // Maximum letter reveals per activity (only after failures)
 
     init: function (activities) {

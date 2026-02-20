@@ -118,14 +118,15 @@ const QuizModule = {
 
             activityCard.appendChild(optionsContainer);
 
-            // Hint
-            if (activity.hint) {
+            // Hint - Only render and show after incorrect answer
+            if (activity.hint && isIncorrect) {
                 const hintBtn = document.createElement('button');
                 hintBtn.className = 'hint-btn';
                 const hintCount = this.hintCounts[activity.id] || 0;
                 const hintLimit = this.hintLimits[activity.id] || 2;
                 hintBtn.textContent = hintCount >= hintLimit ? '💡 Hints Exhausted' : `💡 Show Hint (${hintCount}/${hintLimit})`;
-                hintBtn.disabled = isAttempted || hintCount >= hintLimit;
+                // Button disabled only if hints are exhausted
+                hintBtn.disabled = hintCount >= hintLimit;
                 hintBtn.style.background = hintCount >= hintLimit ? '#6c757d' : '#4ecdc4';
                 hintBtn.addEventListener('click', () => {
                     this.toggleHint(activity, hintBtn);

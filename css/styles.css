@@ -252,9 +252,9 @@ header {
 }
 
 .control-panel-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   border: 2px solid var(--primary-color);
   background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
   color: white;
@@ -264,17 +264,17 @@ header {
   align-items: center;
   justify-content: center;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
 }
 
 .control-panel-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45);
   background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
 }
 
 .control-panel-btn:active {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .control-panel-icon {
@@ -286,21 +286,21 @@ header {
   transform: rotate(20deg) scale(1.2);
 }
 
-/* Control Panel Menu */
+/* ========== SETTINGS PANEL MENU ========== */
 .control-panel-menu {
   position: absolute;
-  bottom: 60px;  /* Changed from top: 60px */
+  bottom: 70px;
   right: 0;
   display: none;
   flex-direction: column;
-  gap: 8px;
   background: var(--card-bg);
   border: 2px solid var(--border-color);
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  min-width: 220px;
-  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);  /* Changed animation name */
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  width: 380px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUpPanel 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1001;
 }
 
@@ -308,79 +308,428 @@ header {
   display: flex;
 }
 
-/* Add the slideUp animation */
-@keyframes slideUp {
+@keyframes slideUpPanel {
   from {
     opacity: 0;
-    transform: translateY(10px);  /* Start from below */
+    transform: translateY(15px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-.control-menu-btn {
+/* Settings Header */
+.settings-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  background: transparent;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 700;
+}
+
+.settings-header h3 {
+  margin: 0;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--text-color);
+}
+
+.settings-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
   cursor: pointer;
+  color: var(--text-color);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.settings-close-btn:hover {
+  background: var(--background-lighter);
+  transform: rotate(90deg);
+}
+
+/* Settings Content */
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+/* Settings Section */
+.settings-section {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+}
+
+.settings-section-title {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Setting Item */
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.setting-item:hover {
+  background: var(--background-lighter);
+}
+
+.setting-item.sub-item {
+  opacity: 0.85;
+  margin-left: 8px;
+  padding-left: 32px;
+}
+
+.setting-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex: 1;
+  color: var(--text-color);
   font-size: 14px;
   font-weight: 600;
-  transition: all 0.2s ease;
-  text-align: left;
 }
 
-.control-menu-btn:hover {
-  background: var(--background-lighter);
-  border-color: var(--primary-color);
-  transform: translateX(4px);
+.setting-icon {
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
 }
 
-.control-menu-btn:active {
-  transform: translateX(2px);
-}
-
-.control-menu-icon {
-  font-size: 20px;
-  display: inline-flex;
-  align-items: center;
-  min-width: 24px;
-}
-
-.control-menu-label {
+.setting-text {
   flex: 1;
 }
 
-.control-menu-btn.active {
-  background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
-  color: white;
+/* ========== TOGGLE SWITCH ========== */
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  width: 48px;
+  height: 28px;
+  background: #ccc;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.toggle-input {
+  display: none;
+}
+
+.toggle-input:checked + .toggle-slider {
+  transform: translateX(20px);
+}
+
+.toggle-input:checked ~ .toggle-switch {
+  background: var(--primary-color);
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch .toggle-input:checked + .toggle-slider {
+  box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+}
+
+/* Dark mode toggle styling */
+.setting-item:has(.toggle-input:checked) .toggle-switch {
+  background: var(--primary-color);
   border-color: var(--primary-dark);
 }
 
+body.dark-mode .toggle-switch:has(.toggle-input:not(:checked)) {
+  background: #555;
+}
+
+/* ========== SLIDER CONTROLS ========== */
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.slider-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-color);
+  min-width: 16px;
+  text-align: center;
+}
+
+.slider-label.large {
+  font-size: 14px;
+}
+
+.settings-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, 
+    var(--primary-light) 0%, 
+    var(--primary-color) 50%, 
+    var(--secondary-color) 100%);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(139, 92, 246, 0.4);
+  border: 2px solid var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.settings-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.5);
+}
+
+.settings-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(139, 92, 246, 0.4);
+  border: 2px solid var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.settings-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.5);
+}
+
+/* ========== VOLUME CONTROLS ========== */
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.volume-icon {
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
+  color: var(--primary-color);
+}
+
+.volume-slider {
+  flex: 1;
+  height: 5px;
+  border-radius: 5px;
+  background: linear-gradient(to right,
+    #4ade80 0%,
+    #22c55e 50%,
+    #16a34a 100%);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
+  border: 2px solid #22c55e;
+  transition: all 0.2s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.5);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
+  border: 2px solid #22c55e;
+}
+
+.volume-percent {
+  min-width: 35px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-color);
+  background: var(--background-lighter);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* ========== SETTINGS ACTIONS ========== */
+.settings-actions {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.settings-action-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.settings-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.settings-action-btn:active {
+  transform: translateY(0);
+}
+
+.settings-action-btn.reset-btn {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  border-color: #fca5a5;
+}
+
+.settings-action-btn.reset-btn:hover {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.action-icon {
+  font-size: 14px;
+}
+
+/* ========== DARK MODE OVERRIDES ========== */
 body.dark-mode .control-panel-menu {
   background: var(--card-bg);
   border-color: var(--border-color);
 }
 
-body.dark-mode .control-menu-btn:hover {
+body.dark-mode .settings-header {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .settings-section {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .setting-item:hover {
   background: var(--background-lighter);
 }
 
-body.dark-mode .control-btn {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
-  border-color: #8b5cf6;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+body.dark-mode .settings-slider {
+  background: linear-gradient(to right,
+    rgba(139, 92, 246, 0.4) 0%,
+    rgba(139, 92, 246, 0.6) 50%,
+    rgba(168, 85, 247, 0.6) 100%);
 }
 
-body.dark-mode .control-btn:hover {
-  background: linear-gradient(135deg, #6d28d9, #5b21b6);
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
+body.dark-mode .settings-close-btn:hover {
+  background: var(--background-lighter);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 600px) {
+  .control-panel-menu {
+    width: 90vw;
+    max-width: 340px;
+    bottom: 100px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .control-panel-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .control-panel-btn {
+    width: 52px;
+    height: 52px;
+  }
+
+  .setting-item.sub-item {
+    padding-left: 20px;
+  }
+
+  .slider-container {
+    gap: 6px;
+  }
+
+  .slider-label {
+    font-size: 11px;
+  }
 }
 
 header::before {
@@ -2891,7 +3240,10 @@ footer {
 
 .hint-btn:active {
   transform: translateY(0);
-}  .hint-text {
+}
+
+@media (max-width: 480px) {
+  .hint-text {
     font-size: 0.9rem;
     padding: 6px;
   }
@@ -3412,4 +3764,867 @@ body.dark-mode .legal-footer-links a:hover {
     display: block;
     width: 100%;
   }
+}
+
+/* ========== ACCESSIBILITY MODES ========== */
+
+/* High Contrast Mode */
+body.high-contrast {
+  --text-color: #000;
+  --background-color: #fff;
+  --card-bg: #f5f5f5;
+  --border-color: #000;
+  --primary-color: #0000ff;
+  --primary-light: #0066ff;
+  --primary-dark: #000099;
+}
+
+body.high-contrast button,
+body.high-contrast input[type="button"],
+body.high-contrast .btn {
+  border-width: 3px;
+  font-weight: 700;
+}
+
+body.high-contrast .module,
+body.high-contrast .card {
+  border-width: 2px;
+}
+
+body.high-contrast .control-panel-btn {
+  border-width: 3px;
+}
+
+/* High Contrast + Dark Mode Combined */
+body.dark-mode.high-contrast {
+  --text-color: #ffffff;              /* Pure white for maximum contrast */
+  --background-color: #0a0e27;        /* Even darker background */
+  --card-bg: #1a1f3a;                 /* Darker cards */
+  --background-lighter: #2d3748;      /* Slightly lighter for contrast */
+  --border-color: #4ade80;             /* Bright green borders for visibility */
+  --primary-color: #00ff00;            /* Bright green */
+  --primary-light: #39ff14;            /* Neon green */ 
+  --primary-dark: #00cc00;             /* Dark green */
+  --secondary-color: #00d4ff;          /* Bright cyan */
+  --text-secondary: #e0e7ff;           /* Very light indigo */
+  --text-tertiary: #cbd5e1;            /* Light slate */
+}
+
+/* High contrast dark mode - enhanced button visibility */
+body.dark-mode.high-contrast button,
+body.dark-mode.high-contrast input[type="button"],
+body.dark-mode.high-contrast .btn {
+  background: linear-gradient(135deg, #00ff00 0%, #39ff14 100%);
+  color: #000000;
+  border: 3px solid #ffffff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+body.dark-mode.high-contrast button:hover,
+body.dark-mode.high-contrast input[type="button"]:hover,
+body.dark-mode.high-contrast .btn:hover {
+  background: linear-gradient(135deg, #39ff14 0%, #00ff00 100%);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+  transform: translateY(-2px);
+}
+
+/* High contrast dark mode - cards and modules */
+body.dark-mode.high-contrast .module,
+body.dark-mode.high-contrast .card,
+body.dark-mode.high-contrast .activity-card {
+  background: #1a1f3a;
+  color: #ffffff;
+  border: 2px solid #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.3);
+}
+
+/* High contrast dark mode - text colors */
+body.dark-mode.high-contrast h1,
+body.dark-mode.high-contrast h2,
+body.dark-mode.high-contrast h3,
+body.dark-mode.high-contrast h4,
+body.dark-mode.high-contrast h5,
+body.dark-mode.high-contrast h6 {
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 255, 0, 0.3);
+}
+
+/* High contrast dark mode - input fields */
+body.dark-mode.high-contrast input,
+body.dark-mode.high-contrast textarea,
+body.dark-mode.high-contrast select {
+  background: #0a0e27;
+  color: #ffffff;
+  border: 2px solid #4ade80;
+}
+
+body.dark-mode.high-contrast input:focus,
+body.dark-mode.high-contrast textarea:focus,
+body.dark-mode.high-contrast select:focus {
+  outline: none;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* High contrast dark mode - control panel */
+body.dark-mode.high-contrast .control-panel-btn {
+  background: linear-gradient(135deg, #00d4ff 0%, #00ffff 100%);
+  color: #000000;
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+body.dark-mode.high-contrast .control-panel-menu {
+  background: #1a1f3a;
+  border: 2px solid #4ade80;
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+}
+
+/* High contrast dark mode - settings panel */
+body.dark-mode.high-contrast .settings-section {
+  border-bottom: 2px solid #4ade80;
+}
+
+body.dark-mode.high-contrast .toggle-switch {
+  background: #0a0e27;
+  border: 2px solid #4ade80;
+}
+
+body.dark-mode.high-contrast .toggle-switch input:checked + .toggle-slider {
+  background: linear-gradient(135deg, #00ff00 0%, #39ff14 100%);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* High contrast dark mode - sliders */
+body.dark-mode.high-contrast .volume-slider,
+body.dark-mode.high-contrast .settings-slider {
+  background: linear-gradient(to right, #00d4ff 0%, #00ff00 50%, #4ade80 100%);
+  border: 2px solid #4ade80;
+}
+
+/* High contrast dark mode - progress and status */
+body.dark-mode.high-contrast .activity-status {
+  background: #0a0e27;
+  border: 2px solid #4ade80;
+  color: #ffffff;
+}
+
+body.dark-mode.high-contrast .activity-status.completed {
+  background: #003300;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  text-shadow: 0 0 4px rgba(0, 255, 0, 0.5);
+}
+
+body.dark-mode.high-contrast .activity-status.incorrect {
+  background: #330000;
+  border: 2px solid #ff4444;
+  color: #ff4444;
+  text-shadow: 0 0 4px rgba(255, 68, 68, 0.5);
+}
+
+/* High contrast dark mode - modal and feedback */
+body.dark-mode.high-contrast .modal-content,
+body.dark-mode.high-contrast .feedback-modal-content {
+  background: #1a1f3a;
+  border: 2px solid #4ade80;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+}
+
+/* High contrast dark mode - quiz options */
+body.dark-mode.high-contrast .quiz-option-btn {
+  background: #0a0e27;
+  border: 2px solid #4ade80;
+  color: #ffffff;
+}
+
+body.dark-mode.high-contrast .quiz-option-btn:hover {
+  background: #1a1f3a;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+}
+
+body.dark-mode.high-contrast .quiz-option-btn.correct {
+  background: #003300;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+body.dark-mode.high-contrast .quiz-option-btn.incorrect {
+  background: #330000;
+  border: 2px solid #ff4444;
+  color: #ff4444;
+  box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+/* Reduce Motion Mode */
+body.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbar Styling for accessibility */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* ========== MEANINGFUL ACTIVITY COLORS ========== */
+/* Learn Module - Blue for knowledge and education */
+[data-section="learn"] {
+  --module-color: #3b82f6;        /* Blue */
+  --module-light: #93c5fd;        /* Light Blue */
+  --module-dark: #1e40af;         /* Dark Blue */
+}
+
+/* Play Module - Green for fun and engagement */
+[data-section="play"] {
+  --module-color: #10b981;        /* Green */
+  --module-light: #6ee7b7;        /* Light Green */
+  --module-dark: #059669;         /* Dark Green */
+}
+
+/* Write Module - Orange for creation and writing */
+[data-section="write"] {
+  --module-color: #f97316;        /* Orange */
+  --module-light: #fed7aa;        /* Light Orange */
+  --module-dark: #d97706;         /* Dark Orange */
+}
+
+/* Navigation button colors based on module */
+.nav-btn[data-section="learn"] {
+  --btn-color: #3b82f6;           /* Blue */
+  --btn-hover: #1e40af;           /* Dark Blue */
+}
+
+.nav-btn[data-section="play"] {
+  --btn-color: #10b981;           /* Green */
+  --btn-hover: #059669;           /* Dark Green */
+}
+
+.nav-btn[data-section="write"] {
+  --btn-color: #f97316;           /* Orange */
+  --btn-hover: #d97706;           /* Dark Orange */
+}
+
+.nav-btn {
+  background: linear-gradient(135deg, var(--btn-color, var(--primary-color)), var(--btn-hover, var(--primary-dark)));
+  color: white;
+  border: 2px solid transparent;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 8px 4px;
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-btn.active {
+  box-shadow: 0 0 15px rgba(var(--btn-color-rgb, 59, 130, 246), 0.5);
+  border-color: currentColor;
+}
+
+/* Learn Button - Blue */
+.nav-btn[data-section="learn"],
+.nav-btn[data-section="learn"]:hover {
+  --btn-color-rgb: 59, 130, 246;
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
+}
+
+/* Play Button - Green */
+.nav-btn[data-section="play"],
+.nav-btn[data-section="play"]:hover {
+  --btn-color-rgb: 16, 185, 145;
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Write Button - Orange */
+.nav-btn[data-section="write"],
+.nav-btn[data-section="write"]:hover {
+  --btn-color-rgb: 249, 115, 22;
+  background: linear-gradient(135deg, #f97316, #d97706);
+}
+
+/* Game Mode Buttons - Green (playing) */
+.game-mode-tag {
+  background: #10b981;
+  color: white;
+  border: 2px solid #059669;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.game-mode-tag:hover {
+  background: #059669;
+  box-shadow: 0 0 12px rgba(16, 185, 145, 0.4);
+}
+
+.game-mode-tag.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 0 15px rgba(16, 185, 145, 0.6);
+}
+
+/* Writing Mode Buttons - Orange (creation) */
+.writing-mode-tag {
+  background: #f97316;
+  color: white;
+  border: 2px solid #d97706;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.writing-mode-tag:hover {
+  background: #d97706;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+}
+
+.writing-mode-tag.active {
+  background: linear-gradient(135deg, #f97316, #d97706);
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
+}
+
+/* Spelling Mode within Writing - Yellow accent (precision/warning) */
+[data-writing-mode="spelling"] {
+  background: #eab308 !important;
+  border-color: #ca8a04 !important;
+}
+
+[data-writing-mode="spelling"]:hover {
+  background: #ca8a04 !important;
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.4) !important;
+}
+
+[data-writing-mode="spelling"].active {
+  background: linear-gradient(135deg, #eab308, #ca8a04) !important;
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.6) !important;
+}
+
+/* Check All Answers button - Teal for verification/completion */
+.sticky-check-all-btn,
+#check-all-button {
+  background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+  border-color: #06b6d4 !important;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4) !important;
+}
+
+.sticky-check-all-btn:hover,
+#check-all-button:hover {
+  background: linear-gradient(135deg, #0891b2, #0e7490) !important;
+  box-shadow: 0 8px 20px rgba(6, 182, 212, 0.6) !important;
+}
+
+/* Reset button - Red for warning/danger */
+#reset-progress,
+.reset-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  border-color: #ef4444 !important;
+}
+
+#reset-progress:hover,
+.reset-btn:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.6) !important;
+}
+
+/* Dark mode adjustments for meaningful colors */
+body.dark-mode .game-mode-tag {
+  background: #059669;
+  border-color: #10b981;
+}
+
+body.dark-mode .game-mode-tag.active {
+  box-shadow: 0 0 15px rgba(16, 185, 145, 0.7);
+}
+
+body.dark-mode .writing-mode-tag {
+  background: #d97706;
+  border-color: #f97316;
+}
+
+body.dark-mode .writing-mode-tag.active {
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.7);
+}
+
+body.dark-mode [data-writing-mode="spelling"] {
+  background: #ca8a04 !important;
+  border-color: #eab308 !important;
+}
+
+body.dark-mode [data-writing-mode="spelling"].active {
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.7) !important;
+}
+
+/* ========== MODERN ANIMATIONS AND TRANSITIONS ========== */
+
+/* Page & Container Animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.05);
+  }
+  28% {
+    transform: scale(1);
+  }
+}
+
+/* Apply animations to elements */
+.module {
+  animation: slideInUp var(--transition-medium) ease-out;
+}
+
+.activity-card,
+.card,
+.quiz-option-btn {
+  transition: all var(--transition-medium) ease;
+  animation: fadeInScale var(--transition-medium) ease-out;
+}
+
+.activity-card:hover,
+.card:hover {
+  animation: none;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Button Transitions */
+button,
+.btn,
+.nav-btn,
+.game-mode-tag,
+.writing-mode-tag,
+input[type="button"],
+input[type="submit"] {
+  transition: all var(--transition-fast) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover,
+.btn:hover,
+.nav-btn:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+button:active,
+.btn:active,
+input[type="button"]:active,
+input[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Interactive Elements Transitions */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  transition: all var(--transition-fast) ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  transform: scale(1.02);
+}
+
+/* Module Navigation Smooth Transition */
+.module-navigation {
+  animation: slideInDown 0.4s ease-out;
+  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Module mode buttons with smooth transitions */
+.game-modes-container,
+.writing-modes-container {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  animation: slideInUp var(--transition-medium) ease-out;
+  flex-wrap: wrap;
+}
+
+.game-mode-tag,
+.writing-mode-tag {
+  animation: fadeInScale var(--transition-fast) ease-out;
+}
+
+/* Modal Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-content,
+.feedback-modal-content {
+  animation: modalFadeIn var(--transition-medium) ease-out;
+  transition: all var(--transition-medium) ease;
+}
+
+.modal-overlay {
+  animation: fadeIn var(--transition-fast) ease-out;
+  transition: opacity var(--transition-fast) ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Staggered animations for list items */
+.activities-container .activity-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.activities-container .activity-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.activities-container .activity-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.activities-container .activity-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.activities-container .activity-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+.activities-container .activity-card:nth-child(n+6) {
+  animation-delay: 0.3s;
+}
+
+/* Feedback animations */
+.feedback-modal-content {
+  position: relative;
+}
+
+.feedback-modal-content.show {
+  animation: slideInUp var(--transition-medium) ease-out;
+}
+
+.feedback-reward {
+  animation: bounce 0.6s ease-out;
+  display: inline-block;
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+/* Completion feedback animation */
+.activity-status.completed {
+  animation: heartbeat 0.6s ease-out;
+}
+
+/* Check All Button - Teal glow */
+#check-all-button,
+.sticky-check-all-btn {
+  animation: slideInRight 0.4s ease-out, glow 2s ease-in-out infinite;
+  animation-delay: 0s, 0.4s;
+}
+
+#check-all-button:hover,
+.sticky-check-all-btn:hover {
+  animation: glow 1s ease-in-out infinite;
+}
+
+/* Control Panel smooth transitions */
+.control-panel-menu {
+  animation: slideInRight var(--transition-medium) ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
+  transition: all var(--transition-medium) ease;
+}
+
+.control-panel-btn {
+  transition: all var(--transition-fast) ease;
+}
+
+.control-panel-btn:hover {
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Settings panel smooth transitions */
+.settings-section {
+  animation: slideInUp var(--transition-medium) ease-out;
+  transition: all var(--transition-fast) ease;
+}
+
+.setting-item {
+  transition: all var(--transition-fast) ease;
+}
+
+.setting-item:hover {
+  transform: translateX(4px);
+}
+
+/* Toggle switch smooth animation */
+.toggle-slider {
+  transition: all var(--transition-fast) ease;
+}
+
+input:checked + .toggle-slider {
+  animation: slideInLeft var(--transition-fast) ease-out;
+}
+
+/* Slider animations */
+input[type="range"] {
+  transition: all var(--transition-fast) ease;
+}
+
+input[type="range"]:hover {
+  filter: brightness(1.1);
+}
+
+/* Quiz specific animations */
+.quiz-option-btn {
+  transition: all var(--transition-fast) ease;
+}
+
+.quiz-option-btn:hover {
+  transform: translateX(4px);
+}
+
+.quiz-option-btn.correct {
+  animation: pulse 0.5s ease-out;
+}
+
+.quiz-option-btn.incorrect {
+  animation: pulse 0.5s ease-out;
+}
+
+/* Word bank animations */
+.word-bank {
+  animation: slideInUp var(--transition-slow) ease-out;
+}
+
+.word-category {
+  animation: fadeInScale var(--transition-medium) ease-out;
+  transition: all var(--transition-fast) ease;
+}
+
+.word {
+  transition: all var(--transition-fast) ease;
+}
+
+.word:hover {
+  transform: scale(1.05) translateY(-2px);
+  cursor: pointer;
+}
+
+/* Header animations */
+header {
+  animation: slideInDown var(--transition-slow) ease-out;
+}
+
+.grammar-btn {
+  transition: all var(--transition-fast) ease;
+}
+
+.grammar-btn:hover {
+  transform: translateY(-3px);
+}
+
+.grammar-btn.active {
+  animation: pulse 0.6s ease-out;
+}
+
+/* Progress bar animation */
+.progress-bar {
+  transition: width var(--transition-slow) cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* Stars animation */
+.star {
+  animation: heartbeat 0.4s ease-out;
+  display: inline-block;
+}
+
+/* Badge animation */
+.badge {
+  animation: bounce 0.5s ease-out;
+  transition: all var(--transition-fast) ease;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+/* Reduce motion respect for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Animation disable state */
+body:not([data-animations="true"]) * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Ensure smooth transitions across view changes */
+main {
+  transition: opacity var(--transition-fast) ease;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
 }
