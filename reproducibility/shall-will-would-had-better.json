@@ -285,7 +285,7 @@
       "id": "game-4",
       "type": "drag-drop",
       "question": "Classify: 'You had better study for the test.'",
-      "sentence": "You had better study for the test.",
+      "sentence": "You had better study for the test. _____",
       "options": [
         "suggestion",
         "promise",
@@ -303,7 +303,7 @@
       "id": "game-5",
       "type": "drag-drop",
       "question": "Error spotter: Identify the incorrect modal use and correct it.",
-      "sentence": "She would go to the meeting tomorrow.",
+      "sentence": "She would go to the meeting tomorrow. _____",
       "options": [
         "Change to 'will'",
         "Change to 'shall'",
