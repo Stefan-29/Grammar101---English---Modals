@@ -411,7 +411,7 @@
       ],
       "audio": "game_6_deduction.mp3",
       "hint": "Based on evidence (worked 12 hours), logical deduction. Use 'must' for certainty (Lesson 5)",
-      "difficulty": "medium"
+      "difficulty": "hard"
     },
     {
       "id": "game-7",
@@ -430,7 +430,7 @@
       ],
       "audio": "game_7_past_obligation.mp3",
       "hint": "Past obligation requires 'had to' (Lesson 2 - 'must' has no past form)",
-      "difficulty": "easy"
+      "difficulty": "medium"
     },
     {
       "id": "game-8",
@@ -449,25 +449,25 @@
       ],
       "audio": "game_8_future_obligation.mp3",
       "hint": "Future obligation uses 'will have to' (Lesson 2 - 'must' has no future form)",
-      "difficulty": "easy"
+      "difficulty": "medium"
     },
     {
       "id": "game-9",
       "type": "drag-drop",
-      "question": "Past deduction: Which correctly shows logical conclusion?",
-      "sentence": "Nobody answered the door. They ____ be home.",
+      "question": "Make negative deductions and express possibilities",
+      "sentence": "Nobody answered the door. They _____ be home, or they _____ be available.",
       "options": [
         "must not",
-        "have not",
-        "don't have to",
-        "mustn't be",
-        "must not be"
+        "might not",
+        "can't",
+        "don't have to"
       ],
       "correctAnswer": [
-        "must not be"
+        "must not",
+        "might not"
       ],
       "audio": "game_9_past_deduction.mp3",
-      "hint": "Negative deduction: 'must not be'. Different from 'mustn't' (prohibition) (Lesson 5)",
+      "hint": "Use 'must not' for negative deduction and 'might not' for possibility.",
       "difficulty": "hard"
     },
     {
